@@ -10,13 +10,10 @@ class ArticlesController < ApplicationController
     def index
        
         #@articles = Article.all
-       
-        
-
         sql = "select * from articles;"
         @articles = ActiveRecord::Base.connection.exec_query(sql)
         
-  
+     
        # @articles = Article.paginate(page: params[:page],per_page: 5)
        
         

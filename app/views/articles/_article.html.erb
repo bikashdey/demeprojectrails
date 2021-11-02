@@ -12,10 +12,12 @@
 
                 <div class="card text-center shadow mb-5 bg-white rounded">
                     <div class="card-header font-italic">
-                    <% @users = find_user(article['user_id']) %>
-                   
-                       by <%= link_to @users.first['username'],user_path(article['user_id']) %>
+                    <% article_join_user = article_join_user(article['id']) %>
                     
+                   
+                       by <%= link_to article_join_user.first['username'],user_path(article['id']) %>
+                     
+                   
                     </div>
                     <div class="card-body">
                         <h5 class="card-title">
