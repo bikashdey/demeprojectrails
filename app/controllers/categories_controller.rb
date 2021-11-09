@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-    before_action :require_admin, except: [:index,:show]
+    #before_action :require_admin, except: [:index,:show]
     def new
         @category = Category.new
     end
@@ -15,7 +15,8 @@ class CategoriesController < ApplicationController
     end
 
     def index
-        @categories = Category.all
+        @categories = ActiveRecord::Base.connection.exec_query("call get_categories")
+        ActiveRecord::Base.clear_all_connections!
         #@categories = Category.paginate(page: params[:page],per_page: 5)
 
     end

@@ -10,8 +10,9 @@ class ArticlesController < ApplicationController
     def index
        
         #@articles = Article.all
-        sql = "select * from articles;"
-        @articles = ActiveRecord::Base.connection.exec_query(sql)
+        #sql = "select * from articles;"
+        @articles = ActiveRecord::Base.connection.exec_query("call get_articles")
+        ActiveRecord::Base.clear_all_connections!
         
      
        # @articles = Article.paginate(page: params[:page],per_page: 5)
@@ -22,19 +23,38 @@ class ArticlesController < ApplicationController
         @article = Article.new
 
     end
+
+    def show
+    end
+
     def create
+       
+        article_title = params[:article][:title]
+        article_description = params[:article][:description]
 
-        @article = Article.new(article_params)
-   
-        @article.user =current_user
+        
+        #@article = Article.new(article_params)
+        
+        @article = ActiveRecord::Base.connection.exec_query("call create_article_insert('#{article_title}','#{article_description}', @val)")
+      
+        @out = ActiveRecord::Base.connection.exec_query("select @val")
+        article_id = @out.first['@val']
+        ActiveRecord::Base.clear_all_connections!
 
-    
-        if @article.save
-            flash[:notice] = "Article was created successfully.."
-            redirect_to @article
-        else
-            render 'new'
-        end
+
+        # create SP for updating user_id column in Article table.
+        # update articles set user_id = userid where id = article_id;
+        ActiveRecord::Base.connection.exec_query("call update_userid_of_articles(#{current_user['id']},#{article_id})")
+        ActiveRecord::Base.clear_all_connections!
+        redirect_to articles_path
+
+        # @article.user =current_user
+        # if @article.save
+        #     flash[:notice] = "Article was created successfully.."
+            
+        # else
+        #     render 'new'
+        # end
     end
 
     def edit
@@ -43,34 +63,48 @@ class ArticlesController < ApplicationController
 
     def update
         
-        if @article.update(article_params)
+        article_title = params[:title]
+        article_description = params[:description]
+        article_category = params[:category_ids][1]
+        @article = ActiveRecord::Base.connection.exec_query("call edit_article('#{article_title}','#{article_description}','#{article_category}')")
+        flash[:notice] = "Article was updated successfully.."
+        redirect_to articles_path
+        # if @article.update(article_params)
             
-            flash[:notice] = "Article was updated successfully.."
-            redirect_to @article
+        #     flash[:notice] = "Article was updated successfully.."
+        #     redirect_to @article
 
-        else
-            render 'edit'
+        # else
+        #     render 'edit'
             
-        end
+        # end
     end
 
     def destroy
-        @article.destroy
+        article_id = params[:id]
+        @article = ActiveRecord::Base.connection.exec_query("call delete_article(#{article_id})")
+        flash[:notice] = "Article was deleted successfully.."
         redirect_to articles_path
     end
 
     private
 
     def set_article
-        @article = Article.find(params[:id])
+        #@article = Article.find(params[:id])
+        article_id= params[:id]
+       
+        @article = ActiveRecord::Base.connection.exec_query("call show_article_details_by_id(#{article_id})").first
+    
+        ActiveRecord::Base.clear_all_connections!
     end
 
-    def article_params
-        params.require(:article).permit(:title, :description, category_ids: [])
-    end
+    # def article_params
+     
+    #     params.require(:article).permit(:title, :description, category_ids: [])
+    # end
 
     def require_same_user
-        if current_user != @article.user && !current_user.admin?
+        if current_user['id'] != @article['user_id'] && !current_user.admin?
             flash[:alert] = "you can only edit ,delete,and update your own articles"
         end
     end

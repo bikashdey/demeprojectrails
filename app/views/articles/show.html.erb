@@ -1,18 +1,5 @@
 
-<!--<div id="page-content">
-<h1> Showing articles details </h1>
-<p> title: <%= @article.title %></p>
-<p> descri: <%= @article.description %></p>
-
-<%= link_to 'Edit', edit_article_path(@article) %> | <%= link_to 'Delete',article_path(@article), method: :delete, data: {confirm: "Are you sure?"} %> | <%= link_to 'Home page', articles_path %>
-</div>-->
-
-
-
-
-
-
-<h2 class="text-center mt-4">Title: <%= @article.title %></h2>
+<h2 class="text-center mt-4">Title: <%= @article['title'] %></h2>
 <p>
     <%= link_to 'Create a new article', new_article_path, class: " text-success btn btn-outline-info"%>
 </p>
@@ -24,30 +11,34 @@
             <div class="col-8 mt-4 ">
                 <div class="card text-center shadow mb-5 bg-white rounded">
                     <div class="card-header font-italic">
-                        by <%= link_to @article.user.username %>
-                        <% if @article.categories.any? %>
+                 
+                        by <%= link_to @article['username'] , user_path%>
+                        
+                        <%# if article['categories'].any? %>
                          
-                            <div class = "mt-2"><%= render @article.categories %></div>
+                            <div class = "mt-2"><%#= render article['categories'] %></div>
 
-                        <% end %>
+                        <%# end %>
                     </div>
                 
                     <div class="card-body">
   
                         <div class="text-left card-text">
-                            <%= simple_format(@article.description) %>
+                            <%= simple_format(@article['description']) %>
                         </div>
                         
                         
-                        <% if logged_in? && (@article.user == current_user || current_user.admin?) %>
-                            <%= link_to 'edit',edit_article_path(@article.id),class: "btn btn-outline-info"%>
-                            <%= link_to 'Delete',article_path(@article.id),class: "btn btn-outline-danger",method: :delete, data: {confirm: "Are you sure?"}%>
+                        <% if logged_in? && ((@article['user_id'] == current_user['id']) || current_user.admin?) %>
+                        
+                        
+                            <%= link_to 'edit',edit_article_path(@article['id']),class: "btn btn-outline-info"%>
+                            <%= link_to 'Delete',article_path(@article['id']),class: "btn btn-outline-danger",method: :delete, data: {confirm: "Are you sure?"}%>
                         <% end %>
                     </div>
 
 
                     <div class="card-footer text-muted">
-                        <small>created <%= time_ago_in_words(@article.created_at) %> ago, edited <%= time_ago_in_words(@article.updated_at) %> </small>
+                        <%#<small>created <%= time_ago_in_words(article['created_at']) %> ago, edited <%#= time_ago_in_words(article['updated_at']) %> </small>
                     </div>
                 </div>
 
