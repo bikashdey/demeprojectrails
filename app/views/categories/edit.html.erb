@@ -8,7 +8,36 @@
 
     <div class="row justify-content-center">
         <div class="col-8">
-            <%= render 'form' %>
+          
+           
+        
+            <%#= render 'shared/errors', obj: @category %>
+           
+            <%= form_with(url: category_path(@categories['id']),class: "shadow p-4 mb-2 bg-info rounded", local: true, method: :put) do |f| %>
+
+                <div class="form-group row">
+                    <%= f.label :name, "Category name", class: "col-2 col-form-label text-dark" %>
+                    <div class="col-8">
+                        <%= f.text_field :name, value: "#{@categories['name']}",class: "form-control shadow rounded", placeholder: " Enter your name" %>
+                    </div>
+                </div>
+
+
+                <div class="form-group text-center ">
+                    <%= f.submit 'update category',class: "btn btn-outline-light btn-lg" %>    
+                </div>
+            <% end %>
+
+
+                
+            
+            <div class="text-center">
+                <%= link_to '[Home Page]', articles_path, class: "text-info"%>
+                
+            </div>
+
+
+
         </div>
 
         

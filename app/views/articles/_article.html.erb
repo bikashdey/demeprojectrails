@@ -14,7 +14,7 @@
                     <div class="card-header font-italic">
                     <% article_join_user = article_join_user(article['id']) %>
                        
-                        by <%= link_to article_join_user.first['username'],user_path(article['id']) %>
+                        by <%= link_to article_join_user.first['username'],user_path(article['user_id']) %>
                         
                      
                    
@@ -35,7 +35,7 @@
                         <% end %>
                     </div>
                     <div class="card-footer text-muted">
-                        <%#<small>created <%= time_ago_in_words(article['created_at'])  ago, edited <%= time_ago_in_words(article['updated_at'])  </small>%>
+                        <small>created <%= time_ago_in_words(article['created_at']) %> ago, edited <%= time_ago_in_words(article['updated_at']) %> </small>
                     </div>
                 </div>
 

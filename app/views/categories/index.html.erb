@@ -18,11 +18,11 @@
                             <%= link_to category['name'],category_path(category['id']),class: "text-success" %>
                         </h5>
                          <p class="card-text">
-                            <%#= pluralize(category['articles'].count,"article") %>
+                            <%= pluralize(get_category_articles(category['id']).count,"article") %>
                         </p>
                     </div>
                     <div class="card-footer text-muted">
-                        <small>created <%#= time_ago_in_words(category.created_at) %> ago, edited <%#= time_ago_in_words(category.updated_at) %> </small>
+                        <small>created <%= time_ago_in_words(category['created_at']) %> ago, edited <%= time_ago_in_words(category['updated_at']) %> </small>
                     </div>
                 </div>
 

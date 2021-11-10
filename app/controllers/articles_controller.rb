@@ -14,6 +14,7 @@ class ArticlesController < ApplicationController
         @articles = ActiveRecord::Base.connection.exec_query("call get_articles")
         ActiveRecord::Base.clear_all_connections!
         
+        
      
        # @articles = Article.paginate(page: params[:page],per_page: 5)
        
@@ -28,12 +29,10 @@ class ArticlesController < ApplicationController
     end
 
     def create
-       
-        article_title = params[:article][:title]
-        article_description = params[:article][:description]
-
         
         #@article = Article.new(article_params)
+        article_title = params[:title]
+        article_description = params[:description]
         
         @article = ActiveRecord::Base.connection.exec_query("call create_article_insert('#{article_title}','#{article_description}', @val)")
       
@@ -46,6 +45,14 @@ class ArticlesController < ApplicationController
         # update articles set user_id = userid where id = article_id;
         ActiveRecord::Base.connection.exec_query("call update_userid_of_articles(#{current_user['id']},#{article_id})")
         ActiveRecord::Base.clear_all_connections!
+
+        # inserting article_id and category_id in article_categories table......
+       
+        category_id = params[:category_ids][1]
+
+        @insert_articleId_categoryId = ActiveRecord::Base.connection.exec_query("call insert_articleId_and_categoryId_into_article_categories(#{article_id},#{category_id})")
+        ActiveRecord::Base.clear_all_connections!
+
         redirect_to articles_path
 
         # @article.user =current_user

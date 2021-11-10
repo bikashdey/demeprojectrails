@@ -11,11 +11,13 @@ class ApplicationController < ActionController::Base
         #or ...
        
         if session["user_id"]
+            # ||= means if @current_user is null then find  from [ User.find(session[:user_id]) and assign to @current_user]
             @current_user ||= User.find(session[:user_id])
         end
             
     end
     def logged_in?
+        # !! means true...
         !!current_user
     end
 

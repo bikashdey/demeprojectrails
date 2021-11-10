@@ -1,5 +1,5 @@
 
-<%= render 'shared/errors', obj: @category %>
+<%#= render 'shared/errors', obj: @category %>
 <%= form_with(model: @category,class: "shadow p-4 mb-2 bg-info rounded", local: true) do |f| %>
 
     <div class="form-group row">
@@ -11,7 +11,7 @@
 
 
     <div class="form-group text-center ">
-        <%= f.submit 'update category',class: "btn btn-outline-light btn-lg" %>    
+        <%= f.submit 'create category',class: "btn btn-outline-light btn-lg" %>    
     </div>
 <% end %>
 

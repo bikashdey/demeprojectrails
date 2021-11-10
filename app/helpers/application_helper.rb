@@ -22,4 +22,10 @@ module ApplicationHelper
         ActiveRecord::Base.clear_all_connections!
  
     end
+
+    def get_category_articles(category_id)
+        category_articles = ActiveRecord::Base.connection.exec_query("call count_all_articles_of_categories(#{category_id})")
+        ActiveRecord::Base.clear_all_connections!
+        return category_articles
+    end
 end
