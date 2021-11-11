@@ -13,8 +13,7 @@ class ArticlesController < ApplicationController
         #sql = "select * from articles;"
         @articles = ActiveRecord::Base.connection.exec_query("call get_articles")
         ActiveRecord::Base.clear_all_connections!
-        
-        
+
      
        # @articles = Article.paginate(page: params[:page],per_page: 5)
        
@@ -74,6 +73,7 @@ class ArticlesController < ApplicationController
         article_description = params[:description]
         article_category = params[:category_ids][1]
         @article = ActiveRecord::Base.connection.exec_query("call edit_article('#{article_title}','#{article_description}','#{article_category}')")
+        ActiveRecord::Base.clear_all_connections!
         flash[:notice] = "Article was updated successfully.."
         redirect_to articles_path
         # if @article.update(article_params)
@@ -90,6 +90,7 @@ class ArticlesController < ApplicationController
     def destroy
         article_id = params[:id]
         @article = ActiveRecord::Base.connection.exec_query("call delete_article(#{article_id})")
+        ActiveRecord::Base.clear_all_connections!
         flash[:notice] = "Article was deleted successfully.."
         redirect_to articles_path
     end

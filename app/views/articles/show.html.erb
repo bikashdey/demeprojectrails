@@ -12,7 +12,8 @@
                 <div class="card text-center shadow mb-5 bg-white rounded">
                     <div class="card-header font-italic">
                  
-                        by <%= link_to @article['username'] , user_path%>
+                        by <%= link_to @article['username'] , user_path(@article['user_id'])%>
+                        
                         
                         <%# if article['categories'].any? %>
                          

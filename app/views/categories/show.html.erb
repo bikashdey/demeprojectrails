@@ -1,10 +1,10 @@
 <h2 class="text-center mt-4">Category: <%= @category.first['name'] %>
 
-<%# if logged_in? && current_user.admin? %>
+<% if logged_in? && current_user.admin? %>
   <div class="text-center mt-4">
     <%= link_to "Edit category name", edit_category_path(@category.first['id']), class: "btn btn-outline-info" %>
   </div>
-<%# end %>
+<% end %>
 
 <h3 class="text-center mt-4">Articles</h3>
 
@@ -24,6 +24,7 @@
 
                 <div class="card text-center shadow mb-5 bg-white rounded">
                     <div class="card-header font-italic">
+                  
                     <% article_user = article_join_user(article['id']) %>
                        
                         by <%= link_to article_user.first['username'],user_path(article['user_id']) %>
