@@ -21,22 +21,30 @@ class UsersController<ApplicationController
     end
 
     def create 
-        
+       
         user_name = params[:user][:username]
         user_email = params[:user][:email]
         user_password = params[:user][:password]
-        @user = ActiveRecord::Base.connection.exec_query("call create_user('#{user_name}','#{user_email}','#{user_password}',@userid)")
-        @user_id_return = ActiveRecord::Base.connection.exec_query("select @userid")
-        user_id_return = @user_id_return.first['@userid']
+        @user = ActiveRecord::Base.connection.exec_query("call create_user('#{user_name}','#{user_email}','#{user_password}',@userid,@cu_username)")
+       
+       # return username from database using SP in output...
+        @current_username = ActiveRecord::Base.connection.exec_query("select @cu_username")
+        current_username = @current_username.first['@cu_username']
         ActiveRecord::Base.clear_all_connections!
-
-        user_username = ActiveRecord::Base.connection.exec_query("call get_user_username_return_byId(#{user_id_return})")
-        ActiveRecord::Base.clear_all_connections!
-
-
-        flash[:notice] = "Welcome \"#{user_username.first['username']}\" you have succesfully signup "
+        flash[:notice] = "Welcome \"#{current_username}\" you have succesfully signup "
         redirect_to login_path
 
+        ##### To get return users.id and using this fetch the username from database #################
+
+        #@user_id_return = ActiveRecord::Base.connection.exec_query("select @userid")
+        #user_id_return = @user_id_return.first['@userid']
+        # user_username = ActiveRecord::Base.connection.exec_query("call get_user_username_return_byId(#{user_id_return})")
+        # ActiveRecord::Base.clear_all_connections!
+        #@@flash[:notice] = "Welcome \"#{user_username.first['username']}\" you have succesfully signup "
+        # flash[:notice] = "Welcome \"#{current_username}\" you have succesfully signup "
+        # redirect_to login_path
+
+        # @user = User.new(user_params)
         # if @user.save
         #     flash[:notice] = "Welcome \"#{@user.username}\" you have succesfully signup "
         #     redirect_to login_path
@@ -70,6 +78,8 @@ class UsersController<ApplicationController
     end
 
     def destroy
+        # @user = User.find(params[:id])
+        # @user.destroy
         user_id = params[:id]
         @user = ActiveRecord::Base.connection.exec_query("call delete_user(#{user_id})")
         ActiveRecord::Base.clear_all_connections!
@@ -85,6 +95,7 @@ class UsersController<ApplicationController
     end
 
     def set_user
+      #@user = User.find(params[:id])
         user_id = params['id']
         @user = ActiveRecord::Base.connection.exec_query("call find_user_byID(#{user_id})")
         ActiveRecord::Base.clear_all_connections!
